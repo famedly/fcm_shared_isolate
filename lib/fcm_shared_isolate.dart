@@ -50,7 +50,7 @@ class FcmSharedIsolate {
       {bool sound = true,
       bool alert = true,
       bool badge = true,
-      bool provisional = false}) async {
+      bool provisional = false,}) async {
     if (kIsWeb || !Platform.isIOS) {
       return true;
     }
