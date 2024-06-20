@@ -1,0 +1,22 @@
+name: "All the sdk specific jobs"
+
+on:
+  workflow_call:
+
+jobs:
+  pub-dev-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repository
+      - uses: actions/checkout@v4
+      # Setup Dart SDK with JWT token
+      - uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+        with:
+          flutter-version: ${{ env.flutter_version }}
+          channel: stable
+          cache: true
+      # Minimal package setup and dry run checks.
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Dry run 
+        run: flutter pub publish --dry-run
