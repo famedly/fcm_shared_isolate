@@ -49,10 +49,16 @@ android {
         }
     }
     namespace 'com.famedly.fcm_shared_isolate_example'
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+
 }
 
 flutter {
@@ -61,4 +67,8 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+kotlin {
+    jvmToolchain(17)
 }
