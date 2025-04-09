@@ -38,6 +38,7 @@ def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
 }
 
 android {
+    namespace "com.famedly.fcm_shared_isolate"
     compileSdk 33
 
     sourceSets {
@@ -45,7 +46,6 @@ android {
     }
     defaultConfig {
         minSdkVersion 19
-        namespace "com.famedly.fcm_shared_isolate"
     }
     lintOptions {
         disable 'InvalidPackage'
