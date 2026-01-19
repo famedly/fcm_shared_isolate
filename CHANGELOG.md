@@ -1,3 +1,7 @@
+## 1.0.0
+- feat: Implement foreground message forwarding on iOS (Christian Kußowski)
+- refactor: (BREAKING) Make Flutter side type safe and remove dynamics (Christian Kußowski)
+
 ## 0.2.0
 
 - Upgrade kotlin version and dependencies
