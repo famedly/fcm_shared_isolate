@@ -16,7 +16,7 @@ class FcmSharedIsolate {
 
   Future<void> handle(MethodCall call) async {
     if (call.method == 'message') {
-      final Map<String, Object?> data = call.arguments;
+      final data = Map<String, Object?>.from(call.arguments);
       final onMessage = _onMessage;
       if (onMessage != null) {
         onMessage(data);
