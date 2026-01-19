@@ -12,6 +12,7 @@ import FirebaseMessaging
         let instance = FcmSharedIsolatePlugin(channel: channel)
         registrar.addApplicationDelegate(instance)
         registrar.addMethodCallDelegate(instance, channel: channel)
+        UNUserNotificationCenter.current().delegate = instance
     }
 
     let channel: FlutterMethodChannel
@@ -87,5 +88,15 @@ import FirebaseMessaging
 
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken token: String?) {
         channel.invokeMethod("token", arguments: [token])
+    }
+    
+    public func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        let userInfo = notification.request.content.userInfo
+        channel.invokeMethod("message", arguments: userInfo)
+        completionHandler([.banner, .sound, .badge])
     }
 }
