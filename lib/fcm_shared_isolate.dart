@@ -6,17 +6,17 @@ import 'package:flutter/services.dart';
 
 class FcmSharedIsolate {
   final _channel = MethodChannel('fcm_shared_isolate');
-  final _msg = <Map<dynamic, dynamic>>[];
-  void Function(Map<dynamic, dynamic>)? _onMessage;
+  final _msg = <Map<String, Object?>>[];
+  void Function(Map<String, Object?>)? _onMessage;
   void Function(String)? _onNewToken;
 
   FcmSharedIsolate() {
     _channel.setMethodCallHandler(handle);
   }
 
-  Future<dynamic> handle(MethodCall call) async {
+  Future<void> handle(MethodCall call) async {
     if (call.method == 'message') {
-      final Map<dynamic, dynamic> data = call.arguments;
+      final Map<String, Object?> data = call.arguments;
       final onMessage = _onMessage;
       if (onMessage != null) {
         onMessage(data);
@@ -27,7 +27,6 @@ class FcmSharedIsolate {
       final String newToken = call.arguments;
       _onNewToken?.call(newToken);
     }
-    return null;
   }
 
   Future<String> getToken() async {
@@ -35,7 +34,7 @@ class FcmSharedIsolate {
   }
 
   void setListeners({
-    void Function(Map<dynamic, dynamic>)? onMessage,
+    void Function(Map<String, Object?>)? onMessage,
     void Function(String)? onNewToken,
   }) {
     _onMessage = onMessage;
@@ -46,11 +45,12 @@ class FcmSharedIsolate {
     }
   }
 
-  Future<bool> requestPermission(
-      {bool sound = true,
-      bool alert = true,
-      bool badge = true,
-      bool provisional = false,}) async {
+  Future<bool> requestPermission({
+    bool sound = true,
+    bool alert = true,
+    bool badge = true,
+    bool provisional = false,
+  }) async {
     if (kIsWeb || !Platform.isIOS) {
       return true;
     }
