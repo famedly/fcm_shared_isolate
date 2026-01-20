@@ -96,7 +96,8 @@ import FirebaseMessaging
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
         let userInfo = notification.request.content.userInfo
-        print("Incoming notification from firebase!")
-        channel.invokeMethod("message", arguments: userInfo)
+        if userInfo["google.c.sender.id"] != nil {
+            channel.invokeMethod("message", arguments: userInfo)
+        }
     }
 }
