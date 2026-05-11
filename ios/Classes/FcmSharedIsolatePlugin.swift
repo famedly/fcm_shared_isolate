@@ -25,7 +25,6 @@ import FirebaseMessaging
                 if let error = error {
                     result(FlutterError(code: "unknown", message: nil, details: error.localizedDescription))
                 } else if let token = token {
-                    print("Some ok")
                     result(String(token))
                 }
             }

@@ -11,7 +11,13 @@ import io.flutter.plugin.common.MethodChannel.Result
 class FcmSharedIsolatePlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
 
-    private val fcm = try { FirebaseMessaging.getInstance() } catch (e: Exception) { null }
+    private var fcmInitError: Exception? = null
+    private val fcm = try {
+        FirebaseMessaging.getInstance()
+    } catch (e: Exception) {
+        fcmInitError = e
+        null
+    }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(flutterPluginBinding.binaryMessenger, "fcm_shared_isolate")
@@ -20,14 +26,35 @@ class FcmSharedIsolatePlugin : FlutterPlugin, MethodCallHandler {
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         if (fcm == null) {
-            result.error("fcm_unavailable", null, null)
+            val initError = fcmInitError
+            result.error(
+                "fcm_unavailable",
+                initError?.localizedMessage ?: "FirebaseMessaging is not available",
+                initError?.let {
+                    mapOf(
+                        "exceptionType" to it.javaClass.name,
+                        "message" to (it.localizedMessage ?: it.message),
+                        "cause" to it.cause?.toString(),
+                    )
+                }
+            )
             return
         }
 
         if (call.method == "getToken") {
             val getToken = fcm.getToken()
             getToken.addOnSuccessListener { result.success(it) }
-            getToken.addOnFailureListener { result.error("unknown", null, null) }
+            getToken.addOnFailureListener { error ->
+                result.error(
+                    "fcm_get_token_failed",
+                    error.localizedMessage ?: "Failed to fetch Firebase token",
+                    mapOf(
+                        "exceptionType" to error.javaClass.name,
+                        "message" to (error.localizedMessage ?: error.message),
+                        "cause" to error.cause?.toString(),
+                    )
+                )
+            }
         } else {
             result.notImplemented()
         }
