@@ -6,8 +6,8 @@ Pod::Spec.new do |s|
   s.license = { :file => '../LICENSE' }
   s.author = { 'Famedly' => 'info@famedly.de' }
   s.source = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'fcm_shared_isolate/Sources/fcm_shared_isolate/**/*'
+  s.public_header_files = 'fcm_shared_isolate/Sources/fcm_shared_isolate/**/*.h'
   s.dependency 'Flutter'
   s.dependency 'Firebase/Messaging'
   s.swift_version = '5.2'

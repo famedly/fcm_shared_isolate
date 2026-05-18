@@ -1,21 +1,21 @@
 name: fcm_shared_isolate
 description: Firebase Messaging Plugin for Flutter supporting shared isolate
 homepage: https://famedly.com
-version: 1.0.2
+version: 1.1.0
 repository: https://github.com/famedly/fcm_shared_isolate
 issue_tracker: https://github.com/famedly/fcm_shared_isolate/issues
 
 environment:
-  sdk: ">=2.12.0 <4.0.0"
-  flutter: ">=1.20.0"
+  sdk: ^3.11.0
+  flutter: ">=3.41.0"
 
 dependencies:
-  firebase_core: ^2.0.0
+  firebase_core: ^4.8.0
   flutter:
     sdk: flutter
 
 dev_dependencies:
-  lints: ">=2.0.0 <4.0.0"
+  lints: ^6.1.0
   flutter_test:
     sdk: flutter
 

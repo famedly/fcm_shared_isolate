@@ -1,3 +1,8 @@
+## 1.1.0
+- breaking: min. iOS version set to iOS 15 (Emre Yurtseven)
+- feat: support Swift Package Manager (SPM) (Emre Yurtseven)
+- chore: update example project and README.md (Emre Yurtseven)
+
 ## 1.0.2
 - fix: Do not send non fcm notifications through onMessage on iOS (Christian Kußowski)
 
