@@ -1,3 +1,7 @@
+## 2.0.0
+- breaking: Updates minimum supported SDK version to Flutter 3.44/Dart 3.12.
+- breaking: Migrates to built-in Kotlin
+
 ## 1.1.0
 - breaking: min. iOS version set to iOS 15 (Emre Yurtseven)
 - feat: support Swift Package Manager (SPM) (Emre Yurtseven)
