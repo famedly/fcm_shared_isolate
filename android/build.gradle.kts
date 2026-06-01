@@ -31,7 +31,7 @@ android {
         }
     }
     defaultConfig {
-        minSdk = 23
+        minSdk = 23 // Please also update minimum requirements in README when changing this.
     }
     lint {
         disable += "InvalidPackage"
