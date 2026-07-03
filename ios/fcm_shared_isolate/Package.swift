@@ -21,8 +21,8 @@ let package = Package(
         .package(name: "FlutterFramework", path: "../FlutterFramework"),
         .package(
             name: "Firebase",
-            url: "https://www.github.com/firebase/firebase-ios-sdk.git",
-            .upToNextMajor(from: "12.13.0")
+            url: "https://github.com/firebase/firebase-ios-sdk.git",
+            .upToNextMajor(from: "12.15.0")
         ),
     ],
     targets: [
