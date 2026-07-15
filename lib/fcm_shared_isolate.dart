@@ -29,8 +29,11 @@ class FcmSharedIsolate {
     }
   }
 
-  Future<String> getToken() async {
-    return await _channel.invokeMethod('getToken');
+  /// Returns the **cached** FCM token if already available. If not, then
+  /// internal initialization should be awaited by listening to
+  /// `onNewToken` in `setListeners()`.
+  Future<String?> getToken() async {
+    return await _channel.invokeMethod<String>('getToken');
   }
 
   void setListeners({

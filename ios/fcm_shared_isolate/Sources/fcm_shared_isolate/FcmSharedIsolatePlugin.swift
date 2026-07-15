@@ -23,9 +23,10 @@ import FirebaseMessaging
             Messaging.messaging().delegate = self
             Messaging.messaging().token { token, error in
                 if let error = error {
-                    result(FlutterError(code: "unknown", message: nil, details: error.localizedDescription))
-                } else if let token = token {
-                    result(String(token))
+                    let nsError = error as NSError
+                    result(FlutterError(code: "unknown/\(nsError.domain)/\(nsError.code)", message: error.localizedDescription, details: nsError.userInfo.description))
+                } else {
+                    result(token.map { String($0) })
                 }
             }
         case "requestPermission":
@@ -60,6 +61,7 @@ import FirebaseMessaging
                 )
 
                 UIApplication.shared.registerForRemoteNotifications()
+                Messaging.messaging().delegate = self
             } else {
                 var notificationTypes: UIUserNotificationType = []
                 if arguments["sound"] as! Bool {
@@ -86,7 +88,7 @@ import FirebaseMessaging
     }
 
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken token: String?) {
-        channel.invokeMethod("token", arguments: [token])
+        channel.invokeMethod("token", arguments: token)
     }
     
     public func userNotificationCenter(
