@@ -1,3 +1,6 @@
+## 3.0.0
+- fix: onNewToken on iOS is not working at all and getToken should return null (Christian Kußowski)
+
 ## 2.0.0
 - breaking: Updates minimum supported SDK version to Flutter 3.44/Dart 3.12.
 - breaking: Migrates to built-in Kotlin
