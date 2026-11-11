@@ -13,3 +13,7 @@ analyzer:
   errors:
     todo: ignore
     fixme: ignore
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
