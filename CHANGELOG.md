@@ -2,6 +2,8 @@
 
 - chore: update example app
 - chore(BREAKING): update firebase_core dependency
+- breaking: min. Android SDK set to 24
+- fix: align podspec iOS deployment target with the iOS 15 minimum
 
 ## 3.0.0
 
