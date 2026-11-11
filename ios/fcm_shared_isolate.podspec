@@ -11,6 +11,6 @@ Pod::Spec.new do |s|
   s.dependency 'Flutter'
   s.dependency 'Firebase/Messaging'
   s.swift_version = '5.2'
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '15.0'
   s.static_framework = true
 end
