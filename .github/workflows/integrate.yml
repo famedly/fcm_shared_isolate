@@ -24,7 +24,7 @@ jobs:
   pub-dev-dry-run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v6
       - run: cat .github/workflows/versions.env >> $GITHUB_ENV
       - uses: famedly/frontend-ci-templates/.github/actions/setup-flutter@v1.3.1
         with:
