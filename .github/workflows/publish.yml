@@ -1,0 +1,63 @@
+name: Publish to pub.dev
+
+on:
+  workflow_call:
+
+jobs:
+  # famedly/frontend-ci-templates' publish-pub.yml uses plain `dart pub`, which
+  # can't resolve a Flutter plugin, so publish with the Flutter SDK here.
+  publish:
+    environment: "pub.dev"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write # Required for authentication using OIDC
+    steps:
+      - uses: actions/checkout@v7
+      - run: cat .github/workflows/versions.env >> $GITHUB_ENV
+      # Sets up the pub.dev OIDC token, which the Flutter SDK's pub reuses.
+      - uses: dart-lang/setup-dart@a57a6c04cf7d4840e88432aad6281d1e125f0d46
+        with:
+          sdk: ${{ env.dart_version }}
+      - uses: famedly/frontend-ci-templates/.github/actions/setup-flutter@v1.3.1
+        with:
+          flutter-version: ${{ env.flutter_version }}
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Publish - dry run
+        run: flutter pub publish --dry-run
+      - name: Publish to pub.dev
+        run: flutter pub publish --force
+
+  create_gh_release:
+    env:
+      GH_TOKEN: ${{ github.token }}
+    needs: [publish]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Create release
+        run: |
+          TAG_NAME=${{ github.ref_name }}
+          version=$(echo $TAG_NAME | sed 's/^v//')
+          releaseRegex="^v[0-9]+\.[0-9]+\.[0-9]+$"
+          releaseCandidateRegex="^v[0-9]+\.[0-9]+\.[0-9]+rc[0-9]+$"
+          notes=$(./scripts/extract_changelog.sh $version)
+          if [ -n "$notes" ]; then
+            if [[ $TAG_NAME =~ $releaseRegex ]]; then
+              gh release create $TAG_NAME --notes "$notes" -t $TAG_NAME --verify-tag
+            elif [[ $TAG_NAME =~ $releaseCandidateRegex ]]; then
+              gh release create $TAG_NAME --notes "$notes" --prerelease -t $TAG_NAME --verify-tag
+            fi
+          else
+            if [[ $TAG_NAME =~ $releaseRegex ]]; then
+              gh release create $TAG_NAME --generate-notes -t $TAG_NAME --verify-tag
+            elif [[ $TAG_NAME =~ $releaseCandidateRegex ]]; then
+              gh release create $TAG_NAME --generate-notes --prerelease -t $TAG_NAME --verify-tag
+            fi
+          fi
