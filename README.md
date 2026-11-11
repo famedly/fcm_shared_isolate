@@ -4,7 +4,7 @@ Firebase Messaging Plugin for Flutter supporting shared isolate
 
 ## Minimum versions
 This package supports the following minumum versions:
-- Android 23 https://firebase.google.com/docs/flutter/setup#android
+- Android 24 https://firebase.google.com/docs/flutter/setup#android
 - iOS 15 https://firebase.google.com/docs/flutter/setup#apple
 
 ## Installing the library
