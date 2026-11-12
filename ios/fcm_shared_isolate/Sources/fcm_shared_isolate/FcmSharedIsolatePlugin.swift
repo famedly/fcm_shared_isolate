@@ -21,6 +21,11 @@ import FirebaseMessaging
         switch call.method {
         case "getToken":
             Messaging.messaging().delegate = self
+            if Messaging.messaging().apnsToken == nil {
+                UIApplication.shared.registerForRemoteNotifications()
+                result(Messaging.messaging().fcmToken)
+                return
+            }
             Messaging.messaging().token { token, error in
                 if let error = error {
                     let nsError = error as NSError
