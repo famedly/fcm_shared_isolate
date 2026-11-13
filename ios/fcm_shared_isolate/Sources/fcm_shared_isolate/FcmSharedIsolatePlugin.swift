@@ -16,19 +16,19 @@ import FirebaseMessaging
     }
 
     let channel: FlutterMethodChannel
+    private var pendingTokenResults: [FlutterResult] = []
 
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         switch call.method {
         case "getToken":
             Messaging.messaging().delegate = self
-            Messaging.messaging().token { token, error in
-                if let error = error {
-                    let nsError = error as NSError
-                    result(FlutterError(code: "unknown/\(nsError.domain)/\(nsError.code)", message: error.localizedDescription, details: nsError.userInfo.description))
-                } else {
-                    result(token.map { String($0) })
-                }
+            // FCM fails with error 505 until APNs has delivered the device token.
+            if Messaging.messaging().apnsToken == nil {
+                pendingTokenResults.append(result)
+                UIApplication.shared.registerForRemoteNotifications()
+                return
             }
+            fetchToken(result)
         case "requestPermission":
             let arguments = call.arguments as! NSDictionary;
             if #available(iOS 10.0, *) {
@@ -85,6 +85,35 @@ import FirebaseMessaging
             assertionFailure(call.method)
             result(FlutterMethodNotImplemented)
         }
+    }
+
+    private func fetchToken(_ result: @escaping FlutterResult) {
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                result(FcmSharedIsolatePlugin.flutterError(error))
+            } else {
+                result(token.map { String($0) })
+            }
+        }
+    }
+
+    private static func flutterError(_ error: Error) -> FlutterError {
+        let nsError = error as NSError
+        return FlutterError(code: "unknown/\(nsError.domain)/\(nsError.code)", message: error.localizedDescription, details: nsError.userInfo.description)
+    }
+
+    public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().apnsToken = deviceToken
+        let results = pendingTokenResults
+        pendingTokenResults.removeAll()
+        if results.isEmpty { return }
+        fetchToken { value in results.forEach { $0(value) } }
+    }
+
+    public func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        let results = pendingTokenResults
+        pendingTokenResults.removeAll()
+        results.forEach { $0(FcmSharedIsolatePlugin.flutterError(error)) }
     }
 
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken token: String?) {
