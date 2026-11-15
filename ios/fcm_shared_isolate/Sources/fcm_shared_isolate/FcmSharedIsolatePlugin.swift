@@ -22,7 +22,8 @@ import FirebaseMessaging
         switch call.method {
         case "getToken":
             Messaging.messaging().delegate = self
-            // FCM fails with error 505 until APNs has delivered the device token.
+            // FCM fails with error 505 before APNs delivers the device token, so the Dart future
+            // stays pending until didRegisterForRemoteNotificationsWithDeviceToken answers it.
             if Messaging.messaging().apnsToken == nil {
                 pendingTokenResults.append(result)
                 UIApplication.shared.registerForRemoteNotifications()
