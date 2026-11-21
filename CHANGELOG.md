@@ -1,3 +1,7 @@
+## 4.0.1
+
+- fix: getToken on iOS waits for the APNs token instead of failing with FCM error 505
+
 ## 4.0.0
 
 - chore: update example app
